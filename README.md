@@ -27,3 +27,7 @@ Verify installation
 ```bash
 aws --version
 ```
+
+# AWS Resources
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription
