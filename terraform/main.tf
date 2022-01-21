@@ -14,7 +14,7 @@ provider "aws" {
 
 resource "aws_sqs_queue" "signups_queue" {
   name                       = "signups_queue"
-  message_retention_seconds  = 345600
+  message_retention_seconds  = 43200
   delay_seconds              = 300
   visibility_timeout_seconds = 45
 }
