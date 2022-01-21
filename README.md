@@ -17,7 +17,8 @@ Terraform v1.1.4
 on linux_amd64
 ```
 
-## Install AWS CLI 
+## AWS CLI
+### Install
 Install [AWS CLI](https://aws.amazon.com/cli/)
 ```bash
 sudo apt install awscli
@@ -27,7 +28,11 @@ Verify installation
 ```bash
 aws --version
 ```
+### Configure
+```bash
+aws configure
+```
 
 # AWS Resources
-https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sqs_queue  
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription
