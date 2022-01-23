@@ -3,6 +3,7 @@ package walaniam.aws.signup;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,7 @@ public class SignupNotificationsHandler implements RequestHandler<SQSEvent, Stri
 
         List<SignupRecord> records = sqsEvent.getRecords().stream()
                 .map(SQSEvent.SQSMessage::getBody)
+                .peek(body -> log.info("Body={}", body))
                 .map(body -> JSON_API.toPojo(body, SignupRecord.class))
                 .collect(Collectors.toList());
 

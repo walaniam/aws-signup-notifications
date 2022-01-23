@@ -1,6 +1,7 @@
 package walaniam.aws.signup;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
@@ -12,6 +13,14 @@ public class JsonApi {
     public String toJson(Object o) {
         try {
             return mapper.writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <T> T toPojo(JsonNode node, String path, Class<T> type) {
+        try {
+            return mapper.treeToValue(node.at(path), type);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

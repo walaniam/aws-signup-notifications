@@ -46,9 +46,10 @@ EOF
 
 # Subscribe SQS queue to SNS topic
 resource "aws_sns_topic_subscription" "signups_sqs_target" {
-  topic_arn = var.sns_signups_arn
-  protocol  = "sqs"
-  endpoint  = aws_sqs_queue.signups_queue.arn
+  topic_arn            = var.sns_signups_arn
+  protocol             = "sqs"
+  endpoint             = aws_sqs_queue.signups_queue.arn
+  raw_message_delivery = true
 }
 
 # Lambda function
@@ -70,9 +71,11 @@ resource "aws_lambda_function" "signups_processing_function" {
 
 # Lambda trigger
 resource "aws_lambda_event_source_mapping" "sqs_to_lambda" {
-  event_source_arn = aws_sqs_queue.signups_queue.arn
-  function_name    = aws_lambda_function.signups_processing_function.arn
-  enabled          = false
+  event_source_arn                   = aws_sqs_queue.signups_queue.arn
+  function_name                      = aws_lambda_function.signups_processing_function.arn
+  batch_size                         = 5
+  maximum_batching_window_in_seconds = 300
+  enabled                            = false
 }
 
 # Lambda role
