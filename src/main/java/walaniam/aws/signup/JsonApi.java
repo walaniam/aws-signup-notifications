@@ -9,11 +9,19 @@ public class JsonApi {
     private final ObjectMapper mapper = new ObjectMapper()
             .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
-    public String toJson(Object o) throws JsonProcessingException {
-        return mapper.writeValueAsString(o);
+    public String toJson(Object o) {
+        try {
+            return mapper.writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public <T> T toPojo(String json, Class<T> type) throws JsonProcessingException {
-        return mapper.readValue(json, type);
+    public <T> T toPojo(String json, Class<T> type) {
+        try {
+            return mapper.readValue(json, type);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

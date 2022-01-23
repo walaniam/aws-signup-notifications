@@ -17,3 +17,15 @@ variable "lambda_function_handler" {
 variable "lambda_runtime" {
   default = "java8"
 }
+
+variable "lambda_env_notification_template" {
+  description = "Notification message template"
+  type        = string
+  sensitive   = true
+}
+
+variable "lambda_env_notification_sender" {
+  description = "Notification message sender email"
+  type        = string
+  sensitive   = true
+}

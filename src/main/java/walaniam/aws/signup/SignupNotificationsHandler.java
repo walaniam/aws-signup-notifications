@@ -6,11 +6,18 @@ import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class SignupNotificationsHandler implements RequestHandler<SQSEvent, String> {
 
     private static final Logger log = LoggerFactory.getLogger(SignupNotificationsHandler.class);
 
     private static final JsonApi JSON_API = new JsonApi();
+    private static final WelcomeNotificationCompiler NOTIFICATION_COMPILER = new WelcomeNotificationCompiler(
+            System.getenv("NOTIFICATION_SENDER"),
+            System.getenv("NOTIFICATION_TEMPLATE")
+    );
 
     public SignupNotificationsHandler() {
         log.info("Lambda instantiated. ENV variables: {}", JSON_API.toJson(System.getenv()));
@@ -21,7 +28,12 @@ public class SignupNotificationsHandler implements RequestHandler<SQSEvent, Stri
 
         log.info("Handling request, eventsCount={}, awsRequestId={}", sqsEvent.getRecords().size(), context.getAwsRequestId());
 
-        sqsEvent.getRecords().forEach(record -> log.info("Record: {}", record.getBody()));
+        List<SignupRecord> records = sqsEvent.getRecords().stream()
+                .map(SQSEvent.SQSMessage::getBody)
+                .map(body -> JSON_API.toPojo(body, SignupRecord.class))
+                .collect(Collectors.toList());
+
+        log.info("Records: {}", records);
 
         log.info("Completed, awsRequestId={}", context.getAwsRequestId());
 

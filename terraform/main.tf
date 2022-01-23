@@ -60,6 +60,12 @@ resource "aws_lambda_function" "signups_processing_function" {
   runtime          = var.lambda_runtime
   role             = aws_iam_role.lambda_role.arn
   memory_size      = 196
+  environment {
+    variables = {
+      NOTIFICATION_TEMPLATE = var.lambda_env_notification_template
+      NOTIFICATION_SENDER   = var.lambda_env_notification_sender
+    }
+  }
 }
 
 # Lambda trigger
