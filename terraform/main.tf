@@ -59,6 +59,7 @@ resource "aws_lambda_function" "signups_processing_function" {
   handler          = var.lambda_function_handler
   runtime          = var.lambda_runtime
   role             = aws_iam_role.lambda_role.arn
+  memory_size      = 196
 }
 
 # Lambda trigger
