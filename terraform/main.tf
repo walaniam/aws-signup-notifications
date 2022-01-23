@@ -17,7 +17,7 @@ resource "aws_sqs_queue" "signups_queue" {
   name                       = "signups_queue"
   message_retention_seconds  = 43200
   delay_seconds              = 300
-  visibility_timeout_seconds = 45
+  visibility_timeout_seconds = 30
 }
 
 resource "aws_sqs_queue_policy" "signups_queue_policy" {
