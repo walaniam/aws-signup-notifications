@@ -1,6 +1,7 @@
 package walaniam.aws.signup;
 
 import org.junit.jupiter.api.Test;
+import walaniam.aws.signup.model.SignupRecord;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

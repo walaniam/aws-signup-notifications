@@ -1,4 +1,4 @@
-package walaniam.aws.signup;
+package walaniam.aws.signup.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -12,6 +12,7 @@ provider "aws" {
   region  = "eu-west-1"
 }
 
+###################################################
 # SQS queue for signup events
 resource "aws_sqs_queue" "signups_queue" {
   name                       = "signups_queue"
@@ -52,6 +53,7 @@ resource "aws_sns_topic_subscription" "signups_sqs_target" {
   raw_message_delivery = true
 }
 
+###################################################
 # Lambda function
 resource "aws_lambda_function" "signups_processing_function" {
   function_name    = "signups_processing_function"
@@ -136,6 +138,40 @@ resource "aws_iam_role_policy" "lambda_role_logs_policy" {
       ],
       "Effect": "Allow",
       "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+############################################
+
+# SQS queue for welcome notification events
+resource "aws_sqs_queue" "welcome_notifications_queue" {
+  name                       = "welcome_notifications_queue"
+  message_retention_seconds  = 43200
+  delay_seconds              = 300
+  visibility_timeout_seconds = 30
+}
+
+resource "aws_sqs_queue_policy" "welcome_notifications_queue_policy" {
+  queue_url = aws_sqs_queue.welcome_notifications_queue.id
+  policy    = <<EOF
+{
+  "Version": "2012-10-17",
+  "Id": "sqspolicy",
+  "Statement": [
+    {
+      "Sid": "AllowLambda",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "sqs:SendMessage",
+      "Resource": "${aws_sqs_queue.welcome_notifications_queue.arn}",
+      "Condition": {
+        "ArnEquals": {
+          "aws:SourceArn": "${aws_lambda_function.signups_processing_function.arn}"
+        }
+      }
     }
   ]
 }

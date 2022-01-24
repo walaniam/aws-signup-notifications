@@ -1,6 +1,10 @@
-package walaniam.aws.signup;
+package walaniam.aws.signup.compiling;
 
 import org.junit.jupiter.api.Test;
+import walaniam.aws.signup.JsonApi;
+import walaniam.aws.signup.model.SignupRecord;
+import walaniam.aws.signup.compiling.WelcomeNotificationCompiler;
+import walaniam.aws.signup.model.WelcomeNotification;
 
 import java.util.Arrays;
 import java.util.List;

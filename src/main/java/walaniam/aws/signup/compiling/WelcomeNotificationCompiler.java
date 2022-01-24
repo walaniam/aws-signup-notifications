@@ -1,6 +1,8 @@
-package walaniam.aws.signup;
+package walaniam.aws.signup.compiling;
 
 import lombok.RequiredArgsConstructor;
+import walaniam.aws.signup.model.WelcomeNotification;
+import walaniam.aws.signup.model.SignupRecord;
 
 import java.util.List;
 import java.util.stream.Collectors;
