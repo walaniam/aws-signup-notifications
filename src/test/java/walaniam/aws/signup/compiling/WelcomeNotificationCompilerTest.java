@@ -1,15 +1,14 @@
 package walaniam.aws.signup.compiling;
 
 import org.junit.jupiter.api.Test;
-import walaniam.aws.signup.JsonApi;
 import walaniam.aws.signup.model.SignupRecord;
-import walaniam.aws.signup.compiling.WelcomeNotificationCompiler;
 import walaniam.aws.signup.model.WelcomeNotification;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static walaniam.aws.signup.JsonApi.toJson;
 
 class WelcomeNotificationCompilerTest {
 
@@ -34,7 +33,7 @@ class WelcomeNotificationCompilerTest {
 
         // when
         WelcomeNotification notification = underTest.compile(receiver, otherJoiners);
-        String json = new JsonApi().toJson(notification);
+        String json = toJson(notification);
 
         // then
         assertThat(notification.getReceiver()).isEqualTo(100);

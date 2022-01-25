@@ -4,31 +4,34 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonApi {
 
-    private final ObjectMapper mapper = new ObjectMapper()
+    private static final ObjectMapper MAPPER = new ObjectMapper()
             .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
-    public String toJson(Object o) {
+    public static String toJson(Object o) {
         try {
-            return mapper.writeValueAsString(o);
+            return MAPPER.writeValueAsString(o);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public <T> T toPojo(JsonNode node, String path, Class<T> type) {
+    public static <T> T toPojo(JsonNode node, String path, Class<T> type) {
         try {
-            return mapper.treeToValue(node.at(path), type);
+            return MAPPER.treeToValue(node.at(path), type);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public <T> T toPojo(String json, Class<T> type) {
+    public static <T> T toPojo(String json, Class<T> type) {
         try {
-            return mapper.readValue(json, type);
+            return MAPPER.readValue(json, type);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

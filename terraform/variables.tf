@@ -11,7 +11,7 @@ variable "lambda_jar_file" {
 }
 
 variable "lambda_function_handler" {
-  default = "walaniam.aws.signup.SignupNotificationsHandler"
+  default = "walaniam.aws.signup.compiling.SignupNotificationsHandler"
 }
 
 variable "lambda_runtime" {

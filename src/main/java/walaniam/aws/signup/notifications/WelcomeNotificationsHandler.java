@@ -4,15 +4,14 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import lombok.extern.slf4j.Slf4j;
-import walaniam.aws.signup.JsonApi;
+
+import static walaniam.aws.signup.JsonApi.toJson;
 
 @Slf4j
 public class WelcomeNotificationsHandler implements RequestHandler<SQSEvent, String> {
 
-    private static final JsonApi JSON_API = new JsonApi();
-
     public WelcomeNotificationsHandler() {
-        log.info("WelcomeNotificationsHandler instantiated. ENV variables: {}", JSON_API.toJson(System.getenv()));
+        log.info("WelcomeNotificationsHandler instantiated. ENV variables: {}", toJson(System.getenv()));
     }
 
     @Override
