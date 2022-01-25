@@ -3,15 +3,16 @@ resource "aws_lambda_function" "signups_processing_function" {
   function_name    = "signups_processing_function"
   filename         = var.lambda_jar_file
   source_code_hash = base64sha256(filebase64(var.lambda_jar_file))
-  handler          = var.lambda_function_handler
+  handler          = var.lambda_signups_function_handler
   runtime          = var.lambda_runtime
   role             = aws_iam_role.lambda_role.arn
   memory_size      = 512
-  timeout          = 60
+  timeout          = 30
   environment {
     variables = {
-      NOTIFICATION_TEMPLATE = var.lambda_env_notification_template
-      NOTIFICATION_SENDER   = var.lambda_env_notification_sender
+      NOTIFICATION_TEMPLATE     = var.lambda_env_notification_template
+      NOTIFICATION_SENDER       = var.lambda_env_notification_sender
+      NOTIFICATION_TARGET_QUEUE = aws_sqs_queue.welcome_notifications_queue.id
     }
   }
 }
@@ -22,7 +23,7 @@ resource "aws_lambda_event_source_mapping" "sqs_to_lambda" {
   function_name                      = aws_lambda_function.signups_processing_function.arn
   batch_size                         = 5
   maximum_batching_window_in_seconds = 300
-  enabled                            = false
+  enabled                            = true
 }
 
 # Lambda role
@@ -58,6 +59,7 @@ resource "aws_iam_role_policy" "lambda_role_sqs_policy" {
               "sqs:DeleteMessage",
               "sqs:ChangeMessageVisibility",
               "sqs:ReceiveMessage",
+              "sqs:SendMessage",
               "sqs:TagQueue",
               "sqs:UntagQueue"
             ],
