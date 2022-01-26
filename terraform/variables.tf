@@ -22,8 +22,8 @@ variable "lambda_runtime" {
   default = "java8"
 }
 
-variable "lambda_env_notification_template" {
-  description = "Notification message template"
+variable "lambda_env_notification_joined_organization" {
+  description = "Notification message joined organization"
   type        = string
   sensitive   = true
 }

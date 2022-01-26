@@ -24,14 +24,14 @@ import static walaniam.aws.signup.JsonApi.toPojo;
 @Slf4j
 public class SignupNotificationsHandler implements RequestHandler<SQSEvent, String> {
 
-    private static final int NUM_OF_OTHER_SIGNUPS = 3;
+    private static final int MIN_NUM_OF_OTHER_SIGNUPS = 3;
 
     private static final WelcomeNotificationCompiler NOTIFICATION_COMPILER = new WelcomeNotificationCompiler(
             Objects.requireNonNull(System.getenv("NOTIFICATION_SENDER")),
-            Objects.requireNonNull(System.getenv("NOTIFICATION_TEMPLATE"))
+            Objects.requireNonNull(System.getenv("NOTIFICATION_JOINED_ORGANIZATION"))
     );
+    private static final Storage STORAGE = new Storage();
 
-    private final Storage storage = new Storage();
     private final SqsClient sqsClient;
     private final String targetQueueUrl;
 
@@ -53,7 +53,7 @@ public class SignupNotificationsHandler implements RequestHandler<SQSEvent, Stri
             Collections.shuffle(permutations);
             List<SignupRecord> otherSignups = permutations.stream()
                     .filter(record -> record.getId() != signup.getId())
-                    .limit(NUM_OF_OTHER_SIGNUPS)
+                    .limit(MIN_NUM_OF_OTHER_SIGNUPS)
                     .collect(Collectors.toList());
 
             WelcomeNotification welcomeNotification = NOTIFICATION_COMPILER.compile(signup, otherSignups);
@@ -62,7 +62,7 @@ public class SignupNotificationsHandler implements RequestHandler<SQSEvent, Stri
             sendNotificationMessage(welcomeNotification);
         });
 
-        storage.save(signups);
+        STORAGE.save(signups);
 
         log.info("Completed, awsRequestId={}", context.getAwsRequestId());
         return "200 OK";
@@ -70,17 +70,18 @@ public class SignupNotificationsHandler implements RequestHandler<SQSEvent, Stri
 
     private List<SignupRecord> findForPermutations(List<SignupRecord> signups) {
 
-        if (signups.size() >= NUM_OF_OTHER_SIGNUPS + 1) {
-            // enough to send
-            return signups;
+        final List<SignupRecord> result;
+
+        if (signups.size() >= MIN_NUM_OF_OTHER_SIGNUPS + 1) {
+            // no need to fetch from dynamodb
+            result = signups;
+        } else {
+            String createdAtYearMonth = yearMonthOf(signups.get(0).getCreatedAt());
+            List<SignupRecord> previousSignups = STORAGE.queryByYearMonthCreated(createdAtYearMonth);
+            result = new ArrayList<>();
+            result.addAll(signups);
+            result.addAll(previousSignups);
         }
-
-        String createdAtYearMonth = yearMonthOf(signups.get(0).getCreatedAt());
-        List<SignupRecord> previousSignups = storage.queryByYearMonthCreated(createdAtYearMonth);
-
-        List<SignupRecord> result = new ArrayList<>();
-        result.addAll(signups);
-        result.addAll(previousSignups);
 
         log.info("Total for permutations: {}", result.size());
 

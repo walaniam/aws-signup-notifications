@@ -10,9 +10,9 @@ resource "aws_lambda_function" "signups_processing_function" {
   timeout          = 30
   environment {
     variables = {
-      NOTIFICATION_TEMPLATE     = var.lambda_env_notification_template
-      NOTIFICATION_SENDER       = var.lambda_env_notification_sender
-      NOTIFICATION_TARGET_QUEUE = aws_sqs_queue.welcome_notifications_queue.id
+      NOTIFICATION_JOINED_ORGANIZATION = var.lambda_env_notification_joined_organization
+      NOTIFICATION_SENDER              = var.lambda_env_notification_sender
+      NOTIFICATION_TARGET_QUEUE        = aws_sqs_queue.welcome_notifications_queue.id
     }
   }
 }

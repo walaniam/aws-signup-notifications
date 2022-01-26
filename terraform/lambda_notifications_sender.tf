@@ -17,10 +17,10 @@ resource "aws_lambda_function" "notifications_sender_function" {
 
 # Lambda trigger
 resource "aws_lambda_event_source_mapping" "notifications_sqs_to_lambda" {
-  event_source_arn                   = aws_sqs_queue.welcome_notifications_queue.arn
-  function_name                      = aws_lambda_function.notifications_sender_function.arn
-  batch_size                         = 1
-  enabled                            = true
+  event_source_arn = aws_sqs_queue.welcome_notifications_queue.arn
+  function_name    = aws_lambda_function.notifications_sender_function.arn
+  batch_size       = 1
+  enabled          = true
 }
 
 # Lambda role
