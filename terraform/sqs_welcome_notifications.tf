@@ -2,8 +2,8 @@
 resource "aws_sqs_queue" "welcome_notifications_queue" {
   name                       = "welcome_notifications_queue.fifo"
   message_retention_seconds  = 43200
-  delay_seconds              = 300
-  visibility_timeout_seconds = 120
+  delay_seconds              = 10
+  visibility_timeout_seconds = 180
   fifo_queue                 = true
 }
 
