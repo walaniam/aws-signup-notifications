@@ -83,3 +83,8 @@ To execute actual deployment run
 ```shell
 terraform apply
 ```
+
+## Destroy resources
+```shell
+terraform destroy
+```
